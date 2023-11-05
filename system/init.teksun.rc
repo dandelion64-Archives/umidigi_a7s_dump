@@ -1,0 +1,46 @@
+#sensor service (begin)
+#
+
+on post-fs-data
+
+    ##MXC4005XC
+    chmod 0660 /dev/mxc4005xc
+    chown system system /dev/mxc4005xc
+    
+    ##MXC6655X
+    chmod 0660 /dev/mxc6655x
+    chown system system /dev/mxc6655x
+
+    #MXC4005
+    chmod 0777 /vendor/bin/memsicp
+    chown root root /vendor/bin/memsicp
+
+    chmod 0666 /sys/bus/platform/devices/11007000.i2c/i2c-0/0-0038/fts_glove_mode
+    chmod 0666 /sys/devices/platform/touch/switch_glove_normal
+service memsicp /vendor/bin/memsicp
+    oneshot    
+    user system
+    group system
+    class main
+#add by moqinlin for check efuse state
+service writemac /system/bin/xunhuefuse
+    class late_start
+    user root
+    group root
+    oneshot
+#add end   
+
+import /vendor/etc/init/hw/init.fingerprint.rc
+
+#DHCPCD eth0
+service dhcpcd_eth0 /system/bin/dhcpcd -aABKL
+    class main
+    disabled
+    oneshot
+
+#IP Renew eth0
+service iprenew_eth0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
