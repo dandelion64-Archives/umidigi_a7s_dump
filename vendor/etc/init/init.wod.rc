@@ -1,0 +1,11 @@
+on post-fs-data
+    mkdir /data/vendor/ipsec 0700 root root
+    mkdir /data/vendor/ipsec/wo 0700 root root
+    mkdir /dev/vendor/net/ 0700 root root
+
+service vendor.epdg_wod /vendor/bin/epdg_wod
+    class late_start
+    socket wod_action stream 660 root system
+    socket wod_sim    stream 660 root system
+    user root
+    group root system log inet radio net_admin 

@@ -1,0 +1,55 @@
+# add for fpsensor Fingerprint selinux
+on init
+   chmod 0777 /dev/fpsensor
+    chown system system /dev/fpsensor
+    mkdir /data/fpsensor
+    chown system system /data/fpsensor
+    chmod 0666 /data/fpsensor/socket
+    chown system system /data/fpsensor/socket
+    chmod 0777 /dev/cs_spi
+    chown system system /dev/cs_spi
+# end  fpsensor Fingerprint selinux
+on post-fs
+    chown system system /dev/sunwave_fp
+    chmod 664 /dev/sunwave_fp
+# add for sunwave tee Fingerprint
+on fs
+    chown system system /dev/sunwave_fp
+    chmod 0666 /dev/sunwave_fp
+# end sunwave Fingerprint
+
+# add for cdfinger tee Fingerprint
+	chmod 0666 /dev/fpsdev0
+	chown system system dev/fpsdev0
+service swfingerprint-hal-1.0 /vendor/bin/hw/vendor.sw.swfingerprint@1.0-service
+    class late_start
+    user system
+    group system
+# end cdfinger tee Fingerprint
+
+#betterlife add by ae team for fingerprint start
+on post-fs-data
+
+    mkdir /data/vendor/blfp 0700 system  system
+
+    #add for ma_fingerprint start
+    mkdir /data/system/ma_fingerprint 0700 system system
+    #add for ma_fingerprint end
+
+on boot
+    chmod 0666 /dev/blfp
+    chown system system /dev/blfp
+
+    chmod 0660 /dev/trusty-ipc-dev0
+    chown system system /dev/trusty-ipc-dev0
+
+    #add for ma_fingerprint start
+    chown system system /dev/madev0
+    chmod 0666          /dev/madev0
+    #add for ma_fingerprint end
+
+service btlfpserver /vendor/bin/hw/btlfpserver
+    class late_start
+    user system
+#betterlife add by ae team for fingerprint end
+
